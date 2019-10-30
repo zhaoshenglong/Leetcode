@@ -9,7 +9,6 @@ class Solution:
         slen: int = s.__len__()
         while i < slen - tlen + 1:
             tmp: int = 0
-            begin: int = i
             while j < tlen and i < slen and s[i] == t[j]:
                 i += 1
                 j += 1
