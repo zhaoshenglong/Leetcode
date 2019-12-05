@@ -1,35 +1,64 @@
-from typing import List
+import os
+import sys
+import time
+from typing import List, Dict
 
 
 class Solution:
     def longest_palindrome(self, s: str) -> str:
-        l: int = s.__len__()
-        m: List[List[str]] = [["" for i in range(l)] for i in range(l)]
+        # begin = time.process_time_ns()
+        str_len: int = len(s)
+        if str_len <= 1:
+            return s
+        valid = True
+        for i in range((str_len + 1) >> 1):
+            if s[i] != s[str_len - i - 1]:
+                valid = False
+                break
+        if valid:
+            return s
 
-        substr_lst: List[str] = []
+        # Length for every possible substr
+        m: List = [0 for i in range(str_len)]
+        n: List = list.copy(m)
 
-        for i in range(l):
-            if s[i] == s[l - 1]:
-                m[0][i] = s[i]
-                substr_lst.insert(0, s[i])
-            if s[0] == s[l - i - 1]:
-                m[i][0] = s[0]
-                substr_lst.insert(0, s[0])
+        start: int = 0
+        end: int = 0
+        for j in range(str_len):
+            if s[j] == s[str_len - 1]:
+                m[j] = 1
+            if s[str_len - 1 - j] == s[0]:
+                n[j] = 1
 
-        for i in range(1, l):
-            for j in range(1, l):
-                if s[l - i - 1] == s[j]:
-                    m[i][j] = m[i - 1][j - 1] + s[j]
-                    substr_lst.insert(0, m[i][j])
-        res: str = ""
-        for s in substr_lst:
-            if self.is_palindrome(s):
-                if s.__len__() > res.__len__():
-                    res = s
+        for i in range(1, str_len):
+            left_top_diag_len: int = m[0]
+            m[0] = n[i]
+            for j in range(1, str_len):
+                if s[str_len - i - 1] == s[j]:
+                    tmp = m[j]
+                    m[j] = left_top_diag_len + 1
+                    left_top_diag_len = tmp
 
-        return res
+                    if m[j] > end - start:
+                        valid = True
+                        tmp = s[j + 1 - m[j]: j + 1]
+                        for k in range((m[j] + 1) >> 1):
+                            if tmp[m[j] - 1 - k] != tmp[k]:
+                                valid = False
+                                break
+                        if valid:
+                            start = j + 1 - m[j]
+                            end = j + 1
+                else:
+                    tmp = m[j]
+                    m[j] = 0
+                    left_top_diag_len = tmp
 
-    def is_palindrome(self, s:str) -> bool:
+        # finish = time.process_time_ns()
+        # print((finish - begin) / 1000000)
+        return s[start:end] if end - start > 0 else s[0]
+
+    def is_palindrome(self, s: str) -> bool:
         l: int = s.__len__()
         for i in range(int((l + 1) / 2)):
             if s[i] != s[l - i - 1]:
@@ -38,7 +67,7 @@ class Solution:
 
 
 def main():
-    instr: str = "babad"
+    instr: str = "babd"
     s: Solution = Solution()
     print(s.longest_palindrome(instr))
 
