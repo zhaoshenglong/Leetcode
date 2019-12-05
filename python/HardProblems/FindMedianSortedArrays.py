@@ -1,3 +1,4 @@
+import math
 from typing import List
 
 
@@ -9,92 +10,59 @@ class Solution:
             return self.find_median(nums2, n)
         if n == 0:
             return self.find_median(nums1, m)
+        min_item = min(nums1[0], nums2[0])
+        max_item = max(nums1[m - 1], nums2[n - 1])
         if m < n:
-            return self.find_helper(nums1, m, nums2, n)
-        else:
-            return self.find_helper(nums2, n, nums1, m)
-
-    def find_helper(self, nums1: List[int], m: int, nums2: List[int], n: int) -> float:
-        if m == 1:
-            return self.direct_find(nums1[0], nums2)
-        m_half = m >> 1
-        m_median: float
-        if m & 1 == 1:
-            m_median = nums1[m_half]
-        else:
-            m_median = (nums1[m_half] + nums1[m_half]) / 2
-
-        n_half = n >> 1
-        n_median: float
-        if n & 1 == 1:
-            n_median = nums2[n_half]
-        else:
-            n_median = (nums2[n_half] + nums2[n_half]) / 2
-
-        if m_median == n_median:
-            return m_median
-
-        if m & 1 == 0 and n & 1 == 0:
-            if m_median < n_median:
-                if nums1[m_half - 1] >= nums2[n_half - 1]:
-                    return (nums1[m_half - 1] + nums1[m_half]) / 2
-                else:
-                    return self.find_helper(nums1[m_half + 1:], m - m_half - 1, nums2[: -m_half], n - m_half)
+            t = n - m
+            for i in range(t >> 1):
+                nums1.insert(0, min_item)
+                nums1.append(max_item)
+            if t & 1 == 1:
+                nums1.append(max_item)
+                return self.recurse_find(nums1, 0, nums2, 0, n)[0]
             else:
-                if nums1[m_half] <= nums2[n_half]:
-                    return (nums1[m_half - 1] + nums1[m_half]) / 2
-                else:
-                    return self.find_helper(nums1[:m_half], m - m_half, nums2[: -m_half], n - m_half)
-        if m & 1 == 1 and n & 1 == 0:
-            if m_median < n_median:
-                if nums1[m_half] > nums2[n_half]:
-                    return nums1[m_half]
-                else:
-                    return self.find_helper(nums1[m_half + 1:], m - m_half - 1, nums2[: -m_half], n - m_half)
+                return sum(self.recurse_find(nums1, 0, nums2, 0, n)) / 2
+        elif m > n:
+            t = m - n
+            for i in range(t >> 1):
+                nums2.insert(0, min_item)
+                nums2.append(max_item)
+            if t & 1 == 1:
+                nums2.append(max_item)
+                return self.recurse_find(nums1, 0, nums2, 0, m)[0]
             else:
-                if nums1[m_half] <= nums2[n_half]:
-                    return nums1[m_half]
-                else:
-                    return self.find_helper(nums1[: m_half + 1], m - m_half + 1, nums2[m_half - 1:], n - m_half + 1)
-        if m & 1 == 0 and n & 1 == 1:
-            if m_median > n_median:
-                if nums1[m_half - 1] < nums2[n_half]:
-                    return nums2[n_half]
-                else:
-                    return self.find_helper(nums1[m_half + 1:], m - m_half - 1, nums2[: -m_half], n - m_half)
-            else:
-                if nums1[m_half] >= nums2[n_half]:
-                    return nums2[n_half]
-                else:
-                    return self.find_helper(nums1[m_half + 1:], m - m_half - 1, nums2[: -m_half], n - m_half)
-        if m_median < n_median:
-            return self.find_helper(nums1[m_half:], m - m_half, nums2[: -m_half], n - m_half)
+                return sum(self.recurse_find(nums1, 0, nums2, 0, m)) / 2
         else:
-            return self.find_helper(nums1[:m_half + 1], m - m_half, nums2[m_half:], n - m_half)
+            return sum(self.recurse_find(nums1, 0, nums2, 0, n)) / 2
 
-    def direct_find(self, num: int, nums: List[int]) -> float:
-        n: int = len(nums)
-        n_half = n >> 1
-        if n & 1 == 1:
-            if n == 1:
-                return (num + nums[0]) / 2
-            elif nums[n_half] <= num:
-                if nums[n_half + 1] >= num:
-                    return (nums[n_half] + num) / 2
+    def recurse_find(self, nums1: List[int], lo1: int, nums2: List[int], lo2: int, n: int) -> tuple:
+        if n == 1:
+            if nums1[lo1] < nums2[lo2]:
+                if len(nums1) > 1 and lo1 + 1 < len(nums1):
+                    if nums1[lo1 + 1] < nums2[lo2]:
+                        return nums1[lo1], nums1[lo1 + 1]
+                    else:
+                        return nums1[lo1], nums2[lo2]
                 else:
-                    return (nums[n_half] + nums[n_half + 1]) / 2
+                    return nums1[lo1], nums2[lo2]
             else:
-                if nums[n_half - 1] >= num:
-                    return (nums[n_half] + num) / 2
+                if len(nums2) > 1 and lo2 + 1 < len(nums2):
+                    if nums2[lo2 + 1] < nums1[lo1]:
+                        return nums2[lo2], nums2[lo2 + 1]
+                    else:
+                        return nums2[lo2], nums1[lo1]
                 else:
-                    return (nums[n_half] + nums[n_half - 1]) / 2
+                    return nums2[lo2], nums1[lo1]
         else:
-            if nums[n_half - 1] <= num <= nums[n_half]:
-                return num
-            elif nums[n_half] < num:
-                return nums[n_half]
+            med = (n - 1) >> 1
+            if nums1[lo1 + med] == nums2[lo2 + med]:
+                if nums1[lo1 + med + 1] <= nums2[lo2 + med + 1]:
+                    return nums1[lo1 + med], nums1[lo2 + med + 1]
+                return nums1[lo1 + med], nums2[lo2 + med + 1]
+            elif nums1[lo1 + med] < nums2[lo2 + med]:
+                return self.recurse_find(nums1, lo1 + (n >> 1), nums2, lo2, (n + 1) >> 1)
             else:
-                return nums[n_half - 1]
+                return self.recurse_find(nums1, lo1, nums2, lo2 + (n >> 1), (n + 1) >> 1)
 
     def find_median(self, nums: List[int], l: int) -> float:
         half: int = l >> 1
@@ -106,8 +74,8 @@ class Solution:
 
 def main():
     s = Solution()
-    nums1 = [1, 2]
-    nums2 = [-1, 3]
+    nums1 = [1]
+    nums2 = [2, 3, 4]
     print(s.find_median_sorted_arrays(nums1, nums2))
 
 
