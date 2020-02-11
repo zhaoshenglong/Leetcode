@@ -19,11 +19,26 @@ def inorder_traverse(root: TreeNode, res: List):
 
 class Solution:
     def inorderTraversal(self, root: TreeNode) -> List[int]:
+        # res = []
+        # if not root:
+        #     return []
+        # inorder_traverse(root, res)
+        # return res
+        # 以上是递归方法
         res = []
         if not root:
             return []
-        inorder_traverse(root, res)
+        stack = []
+        p = root
+        while stack or p:
+            while p:
+                stack.append(p)
+                p = p.left
+            p = stack.pop()
+            res.append(p.val)
+            p = p.right
         return res
+        # 以上是非递归的方法
 
 
 def main():
