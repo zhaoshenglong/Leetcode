@@ -27,17 +27,20 @@ from typing import List
 class Solution:
     def minimumTotal(self, triangle: List[List[int]]) -> int:
         # path[i][j] = min(path[i - 1][j - 1], path[i - 1][j]) + triangle[i][j]
-        sz = len(triangle)
-        if sz == 0:
-            return 0
-        for i in range(1, sz):
-            triangle[i][0] += triangle[i - 1][0]
-            for j in range(1, i):
-                left = triangle[i - 1][j - 1]
-                right = triangle[i - 1][j]
-                triangle[i][j] = left + triangle[i][j] if left < right else right + triangle[i][j]
-            triangle[i][i] += triangle[i - 1][i - 1]
-        return min(triangle[sz - 1])
+        # 在原数组上进行的操作，虽然符合要求没有多余的空间，但是如果要不改变原数组，使用O(n)的
+        # 空间复杂度也是可以的
+        # sz = len(triangle)
+        # if sz == 0:
+        #     return 0
+        # for i in range(1, sz):
+        #     triangle[i][0] += triangle[i - 1][0]
+        #     for j in range(1, i):
+        #         left = triangle[i - 1][j - 1]
+        #         right = triangle[i - 1][j]
+        #         triangle[i][j] = left + triangle[i][j] if left < right else right + triangle[i][j]
+        #     triangle[i][i] += triangle[i - 1][i - 1]
+        # return min(triangle[sz - 1])
+        pass
 
 
 def main():
