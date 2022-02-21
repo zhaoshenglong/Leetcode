@@ -1,0 +1,18 @@
+# Solution
+
+## O(N) Loop
+
+Iterate over the vector, stop at 'L' or 'R'. There are four cases where it stops:
+1. xxxL...Rxxx
+    This is the simplest case, the dots between L and R do not need any manipulation.
+2. xxxR...Lxxx
+    In this case, dots are equally divide into L and R parts.
+3. xxxL...Lxxx
+    In this case, dots are all transferred into L.
+4. xxxR...Rxxx
+    In this case, dots are all transferred into R.
+
+|Time|Ratio|Space|Ratio|
+|----|-----|-----|-----|
+|28ms|81.82%|12.4MB|88.54%|
+
