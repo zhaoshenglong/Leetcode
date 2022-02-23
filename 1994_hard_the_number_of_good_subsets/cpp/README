@@ -1,0 +1,27 @@
+# Solution
+
+## Brute Force
+### Key idea
+All of the numbers are between 1 and 30, and we can easily caculate `good subsets`
+of 1..30. Thus it is possible for us to directly calculate all the unique subsets of `nums vector`.
+
+For example, supporsing that all the numbers are between 1 and 5, the `num vector` and corresponding 
+good subsets are listed below.
+```
+num vector: [1,2,3,4,5,5]
+unique good subsets: {2},{3},{5},{2,3},{2,5},{3,5},{2,3,5}
+```
+Thus, we can easily calculate the number of good subsets in `num vector` is 
+1 {2} + 1 {3} + 2 {5} + 1 {2, 3} + 2 {2, 5} + 2 {3, 5} + 2 {2, 3, 5}.
+
+That is not the final answer, since we forget to consider number 1. Number 1 can be added to any valid 
+good subsets. Thus, the result should product number of subsets of number 1s.
+
+So the final result is 22.
+
+|Time|Ratio|Space|Ratio|
+|----|-----|-----|-----|
+|1836ms|5.47%|529.1MB|5.97%|
+
+
+## Dynamic Programming
