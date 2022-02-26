@@ -1,0 +1,12 @@
+# Solution
+
+## O(N) Loop
+Iterate over the nums vector, if
+* the value is the smallest one, than update the smallest variable,
+* the value is larger than current smallest value, compute the difference,
+    and if the difference is the largest one, update the difference variable.
+
+|Time|Ratio|Space|Ratio|
+|----|-----|-----|-----|
+|4ms|80.14%|7.9MB|99%|
+
