@@ -1,0 +1,13 @@
+# Solution
+
+## Recursive & Memory Method 
+for i in 0..nums.size() - 1:
+    calculate maximum divison value in the left section
+    calculate minimum divison value in the right.
+    store the result in a container like vector
+
+
+|Time|Ratio|Space|Ratio|
+|----|-----|-----|-----|
+|4ms|40.76%|8.4MB|13.59%|
+
