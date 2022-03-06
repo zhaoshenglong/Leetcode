@@ -1,3 +1,5 @@
+#include "../../include/leetcode.hpp"
+
 class Solution {
 public:
     int pos = 0;
