@@ -1,4 +1,4 @@
-#include "../../include/leetcode.hpp"
+#include "../include/leetcode.hpp"
 
 class Solution {
 public:
